@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+    "types": ["node"],
+    "esModuleInterop": true
+  },
+  "files": ["bptree.ts", "test.spec.ts"]
+}
