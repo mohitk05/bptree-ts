@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,101 +7,48 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
-    return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (g && (g = 0, op[0] && (_ = 0)), _) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-var node_test_1 = __importDefault(require("node:test"));
-var bptree_1 = require("./bptree");
-var node_assert_1 = __importDefault(require("node:assert"));
-(0, node_test_1.default)("B+Tree", function (t) { return __awaiter(void 0, void 0, void 0, function () {
-    var bpTree;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                t.beforeEach(function () {
-                    bpTree = new bptree_1.BPTree();
-                });
-                return [4 /*yield*/, t.test("root is null on initialisation", function () {
-                        node_assert_1.default.equal(bpTree.root, null);
-                    })];
-            case 1:
-                _a.sent();
-                return [4 /*yield*/, t.test("insert", function (t) { return __awaiter(void 0, void 0, void 0, function () {
-                        return __generator(this, function (_a) {
-                            switch (_a.label) {
-                                case 0:
-                                    t.beforeEach(function () {
-                                        bpTree = new bptree_1.BPTree();
-                                    });
-                                    return [4 /*yield*/, t.test("insert one element", function () {
-                                            bpTree.insert(1, 10);
-                                            var root = bpTree.root;
-                                            node_assert_1.default.equal(root === null || root === void 0 ? void 0 : root.keys[0], 1);
-                                            node_assert_1.default.equal(root === null || root === void 0 ? void 0 : root.values[0], 10);
-                                        })];
-                                case 1:
-                                    _a.sent();
-                                    return [4 /*yield*/, t.test("insert multiple elements", function () {
-                                            bpTree.insert(2, 20);
-                                            bpTree.insert(3, 30);
-                                            var root = bpTree.root;
-                                            console.log(root);
-                                            node_assert_1.default.equal(root === null || root === void 0 ? void 0 : root.count, 2);
-                                            node_assert_1.default.equal(root === null || root === void 0 ? void 0 : root.keys[0], 2);
-                                            node_assert_1.default.equal(root === null || root === void 0 ? void 0 : root.values[0], 20);
-                                            node_assert_1.default.equal(root === null || root === void 0 ? void 0 : root.keys[1], 3);
-                                            node_assert_1.default.equal(root === null || root === void 0 ? void 0 : root.values[1], 30);
-                                        })];
-                                case 2:
-                                    _a.sent();
-                                    return [4 /*yield*/, t.test("insert more than leaf node capacity", function () {
-                                            for (var i = 0; i < 11; i++) {
-                                                bpTree.insert(i, i * 10);
-                                            }
-                                            node_assert_1.default.equal(bpTree.root instanceof bptree_1.InnerNode, true);
-                                            var root = bpTree.root;
-                                            node_assert_1.default.equal(root.count, 2);
-                                            node_assert_1.default.equal(root.keys[0], 5);
-                                            var leftChild = root.children[0];
-                                            node_assert_1.default.equal(leftChild.count, 5);
-                                        })];
-                                case 3:
-                                    _a.sent();
-                                    return [2 /*return*/];
-                            }
-                        });
-                    }); })];
-            case 2:
-                _a.sent();
-                return [2 /*return*/];
-        }
+import test from "node:test";
+import { BPTree, InnerNode } from "./bptree";
+import assert from "node:assert";
+test("B+Tree", (t) => __awaiter(void 0, void 0, void 0, function* () {
+    let bpTree;
+    t.beforeEach(() => {
+        bpTree = new BPTree();
     });
-}); });
+    yield t.test("root is null on initialisation", () => {
+        assert.equal(bpTree.root, null);
+    });
+    yield t.test("insert", (t) => __awaiter(void 0, void 0, void 0, function* () {
+        t.beforeEach(() => {
+            bpTree = new BPTree();
+        });
+        yield t.test("insert one element", () => {
+            bpTree.insert(1, 10);
+            const root = bpTree.root;
+            assert.equal(root === null || root === void 0 ? void 0 : root.keys[0], 1);
+            assert.equal(root === null || root === void 0 ? void 0 : root.values[0], 10);
+        });
+        yield t.test("insert multiple elements", () => {
+            bpTree.insert(2, 20);
+            bpTree.insert(3, 30);
+            const root = bpTree.root;
+            console.log(root);
+            assert.equal(root === null || root === void 0 ? void 0 : root.count, 2);
+            assert.equal(root === null || root === void 0 ? void 0 : root.keys[0], 2);
+            assert.equal(root === null || root === void 0 ? void 0 : root.values[0], 20);
+            assert.equal(root === null || root === void 0 ? void 0 : root.keys[1], 3);
+            assert.equal(root === null || root === void 0 ? void 0 : root.values[1], 30);
+        });
+        yield t.test("insert more than leaf node capacity", () => {
+            for (let i = 0; i < 11; i++) {
+                bpTree.insert(i, i * 10);
+            }
+            assert.equal(bpTree.root instanceof InnerNode, true);
+            const root = bpTree.root;
+            assert.equal(root.count, 2);
+            assert.equal(root.keys[0], 5);
+            const leftChild = root.children[0];
+            assert.equal(leftChild.count, 5);
+        });
+    }));
+}));

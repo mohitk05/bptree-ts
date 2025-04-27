@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "types": ["node"],
-    "esModuleInterop": true
+    "lib": ["ES2017"],
+    "target": "ES6"
   },
-  "files": ["bptree.ts", "test.spec.ts"]
+  "files": ["bptree.ts"]
 }

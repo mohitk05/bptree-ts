@@ -1,114 +1,98 @@
-"use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        if (typeof b !== "function" && b !== null)
-            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.BPTree = exports.LeafNode = exports.InnerNode = void 0;
-var BaseNode = /** @class */ (function () {
-    function BaseNode(level, count) {
+class BaseNode {
+    constructor(level, count) {
         this.level = level;
         this.count = count;
+        this.id = this.generateId();
     }
-    BaseNode.prototype.isLeaf = function () {
+    generateId() {
+        return Math.random().toString(36).substring(2, 15);
+    }
+    isLeaf() {
         return this.level === 0;
-    };
-    return BaseNode;
-}());
-var InnerNode = /** @class */ (function (_super) {
-    __extends(InnerNode, _super);
-    function InnerNode() {
-        var _this = _super.call(this, 0, 0) || this;
-        _this.keys = [];
-        _this.children = [];
-        return _this;
     }
-    InnerNode.capacity = 10;
-    return InnerNode;
-}(BaseNode));
-exports.InnerNode = InnerNode;
-var LeafNode = /** @class */ (function (_super) {
-    __extends(LeafNode, _super);
-    function LeafNode() {
-        var _this = _super.call(this, 0, 0) || this;
-        _this.keys = [];
-        _this.values = [];
-        return _this;
+}
+export class InnerNode extends BaseNode {
+    constructor() {
+        super(0, 0);
+        this.keys = [];
+        this.children = [];
     }
-    LeafNode.capacity = 10;
-    return LeafNode;
-}(BaseNode));
-exports.LeafNode = LeafNode;
-var BPTree = /** @class */ (function () {
-    function BPTree() {
+}
+InnerNode.capacity = 10;
+export class LeafNode extends BaseNode {
+    constructor() {
+        super(0, 0);
+        this.keys = [];
+        this.values = [];
+    }
+}
+LeafNode.capacity = 10;
+export class BPTree {
+    constructor() {
         this.root = null;
     }
-    BPTree.prototype.lookup = function (key) {
+    lookup(key) {
         if (!this.root) {
             return null;
         }
-        var node = this.root;
+        let node = this.root;
         while (!node.isLeaf()) {
-            var innerNode = node;
-            var pos = this.lowerBound(innerNode.keys, key);
-            var childNodePosition = pos === -1
+            const innerNode = node;
+            const pos = this.lowerBound(innerNode.keys, key);
+            const childNodePosition = pos === -1
                 ? innerNode.keys.length
                 : key === innerNode.keys[pos]
                     ? pos + 1
                     : pos;
             node = innerNode.children[childNodePosition];
         }
-        var leafNode = node;
+        const leafNode = node;
         if (leafNode.keys.includes(key)) {
             return leafNode.values[leafNode.keys.indexOf(key)];
         }
         return null;
-    };
-    BPTree.prototype.insert = function (key, value) {
+    }
+    insert(key, value) {
         if (!this.root) {
-            var leaf = new LeafNode();
+            const leaf = new LeafNode();
             leaf.keys[0] = key;
             leaf.values[0] = value;
             leaf.count = 1;
             this.root = leaf;
             return;
         }
-        var result = this._insert(this.root, key, value);
+        const result = this._insert(this.root, key, value);
         if (result) {
             // split root node
-            var newRoot = new InnerNode();
+            const newRoot = new InnerNode();
             newRoot.count = 2;
             newRoot.children = [this.root, result.node];
             newRoot.keys[0] = result.separatorKey;
             newRoot.level = this.root.level + 1;
             this.root = newRoot;
         }
-    };
-    BPTree.prototype.erase = function (key) { };
-    BPTree.prototype.lowerBound = function (arr, key) {
-        return arr.findIndex(function (n) { return n > key; });
-    };
-    BPTree.prototype._insert = function (node, key, value) {
+    }
+    erase(key) { }
+    lowerBound(arr, key) {
+        return arr.findIndex((n) => n > key);
+    }
+    _insert(node, key, value) {
         if (node.isLeaf()) {
-            var leafNode = node;
-            var index = leafNode.keys.indexOf(key);
+            const leafNode = node;
+            const index = leafNode.keys.indexOf(key);
             if (index !== -1) {
                 leafNode.values[index] = value;
             }
             else {
-                leafNode.keys.push(key);
-                leafNode.values.push(value);
+                const pos = this.lowerBound(leafNode.keys, key);
+                if (pos === -1) {
+                    leafNode.keys.push(key);
+                    leafNode.values.push(value);
+                }
+                else {
+                    leafNode.keys.splice(pos, 0, key);
+                    leafNode.values.splice(pos, 0, value);
+                }
                 leafNode.count++;
             }
             if (leafNode.keys.length <= LeafNode.capacity) {
@@ -116,8 +100,8 @@ var BPTree = /** @class */ (function () {
             }
             else {
                 // split leaf node
-                var mid = Math.floor(leafNode.keys.length / 2);
-                var newNode = new LeafNode();
+                const mid = Math.floor(leafNode.keys.length / 2);
+                const newNode = new LeafNode();
                 newNode.keys = leafNode.keys.slice(mid);
                 newNode.values = leafNode.values.slice(mid);
                 newNode.count = leafNode.keys.length - mid;
@@ -128,15 +112,15 @@ var BPTree = /** @class */ (function () {
             }
         }
         else {
-            var innerNode = node;
-            var pos = this.lowerBound(innerNode.keys, key);
-            var childNodePosition = pos === -1
+            const innerNode = node;
+            const pos = this.lowerBound(innerNode.keys, key);
+            const childNodePosition = pos === -1
                 ? innerNode.keys.length
                 : key === innerNode.keys[pos]
                     ? pos + 1
                     : pos;
-            var childNode = innerNode.children[childNodePosition];
-            var result = this._insert(childNode, key, value);
+            const childNode = innerNode.children[childNodePosition];
+            const result = this._insert(childNode, key, value);
             if (result) {
                 // insert new key
                 innerNode.keys.splice(childNodePosition, 0, result.separatorKey);
@@ -147,9 +131,9 @@ var BPTree = /** @class */ (function () {
                 }
                 else {
                     // split inner node
-                    var mid = Math.floor(innerNode.keys.length / 2);
-                    var separatorKey = innerNode.keys[mid];
-                    var newNode = new InnerNode();
+                    const mid = Math.floor(innerNode.keys.length / 2);
+                    const separatorKey = innerNode.keys[mid];
+                    const newNode = new InnerNode();
                     newNode.count = innerNode.keys.length - mid;
                     newNode.level = innerNode.level;
                     newNode.keys = innerNode.keys.slice(mid + 1);
@@ -157,12 +141,10 @@ var BPTree = /** @class */ (function () {
                     innerNode.count = mid + 1;
                     innerNode.keys = innerNode.keys.slice(0, mid);
                     innerNode.children = innerNode.children.slice(0, mid + 1);
-                    return { node: newNode, separatorKey: separatorKey };
+                    return { node: newNode, separatorKey };
                 }
             }
             return null;
         }
-    };
-    return BPTree;
-}());
-exports.BPTree = BPTree;
+    }
+}

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B+Tree Visualisation</title>
+</head>
+<body>
+  <button id="insert">Insert random pair</button>
+  <button id="zoom-out">Zoom out</button>
+  <button id="zoom-in">Zoom in</button>
+  <br>
+  <style>
+    .node {
+      border: 1px solid #000;
+      padding: 10px;
+      margin: 5px;
+      display: inline-block;
+      background-color: #f0f0f0;
+    }
+    #tree {
+      width: 100%;
+      height: 500px;
+      overflow: auto;
+    }
+
+    #mermaid svg {
+      width: auto;
+      height: auto;
+    }
+  </style>
+  <div id="tree">
+
+  </div>
+  <script src="./bptree.js" type="module"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11.6.0/dist/mermaid.min.js"></script>
+  <script type="module">
+    // import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11.6.0/+esm';
+    mermaid.initialize({ startOnLoad: true });
+    import { BPTree, LeafNode, InnerNode } from './bptree.js';
+    LeafNode.capacity = 3;
+    InnerNode.capacity = 3;
+    const tree = new BPTree();
+    const proxy = new Proxy(tree, {
+      get(target, prop) {
+        if (prop === 'insert') {
+          return function (key, value) {
+            target[prop](key, value);
+            drawTree(treeContainer, target);
+          };
+        }
+        return target[prop];
+      }
+    });
+    const treeContainer = 'tree';
+
+    function insertRandomPair() {
+      const key = Math.floor(Math.random() * 500);
+      const value = Math.random().toString(36).substring(2, 15);
+      console.log(`Inserting key: ${key}, value: ${value}`);
+      proxy.insert(key, value);
+    }
+
+    document.getElementById('insert').addEventListener('click', insertRandomPair);
+
+    async function drawTree(containerId, tree) {
+      // use mermaid to render the tree
+      const tDiv = document.getElementById(containerId);
+      const newDiv = document.createElement('div');
+      newDiv.id = 'mermaid';
+      const queue = [tree.root];
+      const nodes = [];
+      const edges = [];
+      while (queue.length > 0) {
+        const currentNode = queue.shift();
+        if (!currentNode) continue;
+        nodes.push(`${currentNode.id}[${currentNode.keys.join(', ')}]`);
+        if (currentNode.children) {
+          for (const child of currentNode.children) {
+            queue.push(child);
+            edges.push(`${currentNode.id} --> ${child.id}`);
+          }
+        }
+      }
+      const graphDefinition = `
+        graph TD
+          ${nodes.join('\n')}
+          ${edges.join('\n')}
+      `;
+      console.log('Graph definition:', graphDefinition);
+      newDiv.innerHTML = graphDefinition;
+      tDiv.innerHTML = ''; // Clear the container
+      tDiv.appendChild(newDiv);
+      await mermaid.run({ querySelector: `#mermaid`, suppressErrors: true });
+    }
+
+    // setInterval(() => {
+    //   insertRandomPair();
+    // }, 500);
+
+    const zoomInButton = document.getElementById('zoom-in');
+    const zoomOutButton = document.getElementById('zoom-out');
+    const treeContainerElement = document.getElementById("mermaid");
+    let zoomLevel = 1;
+    const zoomStep = 0.1;
+    const maxZoom = 2;
+    const minZoom = 0.1;
+    zoomInButton.addEventListener('click', () => {
+      if (zoomLevel < maxZoom) {
+        zoomLevel += zoomStep;
+        treeContainerElement.style.transform = `scale(${zoomLevel})`;
+      }
+    });
+    zoomOutButton.addEventListener('click', () => {
+      if (zoomLevel > minZoom) {
+        zoomLevel -= zoomStep;
+        treeContainerElement.style.transform = `scale(${zoomLevel})`;
+      }
+    });
+
+    // function drawTree(container, tree) {
+    //   container.innerHTML = ''; // Clear the container
+    //   const root = tree.root;
+    //   console.log('Drawing tree:', root);
+    //   if (root) {
+    //     // const rootDiv = document.createElement('div');
+    //     // rootDiv.className = 'node';
+    //     // rootDiv.textContent = `Root: ${root.keys.join(', ')}`;
+    //     // container.appendChild(rootDiv);
+
+    //     const queue = [root];
+    //     while (queue.length > 0) {
+    //       const currentNode = queue.shift();
+    //       const nodeDiv = document.createElement('div');
+    //       nodeDiv.className = 'node';
+    //       nodeDiv.textContent = `Node: ${currentNode.keys.join(', ')}`;
+    //       nodeDiv.style.marginTop = `${currentNode.level * 20}px`;
+    //       container.appendChild(nodeDiv);
+
+    //       if (currentNode.children) {
+    //         for (const child of currentNode.children) {
+    //           queue.push(child);
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
+
+    // Initial draw
+    // drawTree(treeContainer, tree);
+  </script>
+</body>
+</html>

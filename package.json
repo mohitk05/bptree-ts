@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "node test.spec.js",
+    "test": "tsx test.spec.ts",
+    "benchmark": "tsx benchmark.ts",
     "pretest": "tsc",
     "build": "tsc"
   },
@@ -13,8 +14,10 @@
   "description": "",
   "devDependencies": {
     "@types/benchmark": "^2.1.5",
-    "@types/node": "^22.14.1",
     "benchmark": "^2.1.4",
+    "mitata": "^1.0.34",
+    "sorted-btree": "^1.8.1",
+    "tsx": "^4.19.3",
     "typescript": "^5.8.3"
   }
 }

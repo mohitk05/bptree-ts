@@ -3,10 +3,17 @@ class BaseNode {
   level: number;
   // number of children
   count: number;
+  // identifier
+  id: string;
 
   constructor(level: number, count: number) {
     this.level = level;
     this.count = count;
+    this.id = this.generateId();
+  }
+
+  private generateId() {
+    return Math.random().toString(36).substring(2, 15);
   }
 
   isLeaf() {
@@ -108,8 +115,14 @@ export class BPTree {
       if (index !== -1) {
         leafNode.values[index] = value;
       } else {
-        leafNode.keys.push(key);
-        leafNode.values.push(value);
+        const pos = this.lowerBound(leafNode.keys, key);
+        if (pos === -1) {
+          leafNode.keys.push(key);
+          leafNode.values.push(value);
+        } else {
+          leafNode.keys.splice(pos, 0, key);
+          leafNode.values.splice(pos, 0, value);
+        }
         leafNode.count++;
       }
 
