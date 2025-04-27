@@ -21,4 +21,4 @@ console.log(value); // 10
 
 This is an early benchmark run using [`mitata`](https://github.com/evanwashere/mitata) that compares this implementation with other B+Tree implementations. The benchmark is not exhaustive and will be updated in the future.
 
-![Benchmark](bench.png)
+![Benchmark](./bench.png)

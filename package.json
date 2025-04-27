@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "main": "index.js",
   "type": "module",
+  "files": [
+    "bptree.js"
+  ],
   "scripts": {
     "test": "vitest",
     "benchmark": "tsx benchmark.ts",
