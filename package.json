@@ -8,7 +8,7 @@
     "benchmark": "tsx benchmark.ts",
     "pretest": "tsc",
     "build": "tsc",
-    "release": "@changesets/cli publish"
+    "release": "changeset publish"
   },
   "keywords": [],
   "author": "",
