@@ -2,15 +2,13 @@ class BaseNode {
     constructor(level, count) {
         this.level = level;
         this.count = count;
-        this.id = this.generateId();
-    }
-    generateId() {
-        return Math.random().toString(36).substring(2, 15);
+        this.id = BaseNode.idCounter++;
     }
     isLeaf() {
         return this.level === 0;
     }
 }
+BaseNode.idCounter = 0;
 export class InnerNode extends BaseNode {
     constructor() {
         super(0, 0);

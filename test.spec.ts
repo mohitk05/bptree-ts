@@ -1,51 +1,49 @@
-import test from "node:test";
-import { BPTree, InnerNode, LeafNode } from "./bptree";
-import assert from "node:assert";
+import { BPTree, InnerNode, LeafNode } from "./bptree.js";
+import { expect, test, beforeEach, suite, describe } from "vitest";
 
-test("B+Tree", async (t) => {
+suite("B+Tree", async () => {
   let bpTree: BPTree;
-  t.beforeEach(() => {
+  beforeEach(() => {
     bpTree = new BPTree();
   });
 
-  await t.test("root is null on initialisation", () => {
-    assert.equal(bpTree.root, null);
+  test("root is null on initialisation", () => {
+    expect(bpTree.root).toEqual(null);
   });
 
-  await t.test("insert", async (t) => {
-    t.beforeEach(() => {
+  describe("insert", async (t) => {
+    beforeEach(() => {
       bpTree = new BPTree();
     });
 
-    await t.test("insert one element", () => {
+    test("insert one element", () => {
       bpTree.insert(1, 10);
       const root = bpTree.root as LeafNode;
-      assert.equal(root?.keys[0], 1);
-      assert.equal(root?.values[0], 10);
+      expect(root?.keys[0]).toBe(1);
+      expect(root?.values[0]).toBe(10);
     });
 
-    await t.test("insert multiple elements", () => {
+    test("insert multiple elements", () => {
       bpTree.insert(2, 20);
       bpTree.insert(3, 30);
       const root = bpTree.root as LeafNode;
-      console.log(root);
-      assert.equal(root?.count, 2);
-      assert.equal(root?.keys[0], 2);
-      assert.equal(root?.values[0], 20);
-      assert.equal(root?.keys[1], 3);
-      assert.equal(root?.values[1], 30);
+      expect(root?.count).toBe(2);
+      expect(root?.keys[0]).toBe(2);
+      expect(root?.values[0]).toBe(20);
+      expect(root?.keys[1]).toBe(3);
+      expect(root?.values[1]).toBe(30);
     });
 
-    await t.test("insert more than leaf node capacity", () => {
+    test("insert more than leaf node capacity", () => {
       for (let i = 0; i < 11; i++) {
         bpTree.insert(i, i * 10);
       }
-      assert.equal(bpTree.root instanceof InnerNode, true);
+      expect(bpTree.root instanceof InnerNode).toBe(true);
       const root = bpTree.root as InnerNode;
-      assert.equal(root.count, 2);
-      assert.equal(root.keys[0], 5);
+      expect(root.count).toBe(2);
+      expect(root.keys[0]).toBe(5);
       const leftChild = root.children[0] as LeafNode;
-      assert.equal(leftChild.count, 5);
+      expect(leftChild.count).toBe(5);
     });
   });
 });

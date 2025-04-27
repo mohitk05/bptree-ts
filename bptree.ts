@@ -1,19 +1,16 @@
 class BaseNode {
+  private static idCounter = 0;
   // level in the tree
   level: number;
   // number of children
   count: number;
   // identifier
-  id: string;
+  id: number;
 
   constructor(level: number, count: number) {
     this.level = level;
     this.count = count;
-    this.id = this.generateId();
-  }
-
-  private generateId() {
-    return Math.random().toString(36).substring(2, 15);
+    this.id = BaseNode.idCounter++;
   }
 
   isLeaf() {

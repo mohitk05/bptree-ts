@@ -1,9 +1,10 @@
 {
   "name": "bptree-ts",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "tsx test.spec.ts",
+    "test": "vitest",
     "benchmark": "tsx benchmark.ts",
     "pretest": "tsc",
     "build": "tsc"
@@ -14,10 +15,12 @@
   "description": "",
   "devDependencies": {
     "@types/benchmark": "^2.1.5",
+    "@types/node": "^22.15.2",
     "benchmark": "^2.1.4",
     "mitata": "^1.0.34",
     "sorted-btree": "^1.8.1",
     "tsx": "^4.19.3",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vitest": "^3.1.2"
   }
 }

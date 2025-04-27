@@ -6,8 +6,6 @@
 </head>
 <body>
   <button id="insert">Insert random pair</button>
-  <button id="zoom-out">Zoom out</button>
-  <button id="zoom-in">Zoom in</button>
   <br>
   <style>
     .node {
@@ -34,7 +32,6 @@
   <script src="./bptree.js" type="module"></script>
   <script src="https://cdn.jsdelivr.net/npm/mermaid@11.6.0/dist/mermaid.min.js"></script>
   <script type="module">
-    // import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11.6.0/+esm';
     mermaid.initialize({ startOnLoad: true });
     import { BPTree, LeafNode, InnerNode } from './bptree.js';
     LeafNode.capacity = 3;
@@ -116,37 +113,6 @@
         treeContainerElement.style.transform = `scale(${zoomLevel})`;
       }
     });
-
-    // function drawTree(container, tree) {
-    //   container.innerHTML = ''; // Clear the container
-    //   const root = tree.root;
-    //   console.log('Drawing tree:', root);
-    //   if (root) {
-    //     // const rootDiv = document.createElement('div');
-    //     // rootDiv.className = 'node';
-    //     // rootDiv.textContent = `Root: ${root.keys.join(', ')}`;
-    //     // container.appendChild(rootDiv);
-
-    //     const queue = [root];
-    //     while (queue.length > 0) {
-    //       const currentNode = queue.shift();
-    //       const nodeDiv = document.createElement('div');
-    //       nodeDiv.className = 'node';
-    //       nodeDiv.textContent = `Node: ${currentNode.keys.join(', ')}`;
-    //       nodeDiv.style.marginTop = `${currentNode.level * 20}px`;
-    //       container.appendChild(nodeDiv);
-
-    //       if (currentNode.children) {
-    //         for (const child of currentNode.children) {
-    //           queue.push(child);
-    //         }
-    //       }
-    //     }
-    //   }
-    // }
-
-    // Initial draw
-    // drawTree(treeContainer, tree);
   </script>
 </body>
 </html>
